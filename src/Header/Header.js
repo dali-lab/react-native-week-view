@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text, View } from 'react-native';
 
+import moment from 'moment';
 import {
   getFormattedDate,
   calculateDaysArray,
@@ -16,23 +17,42 @@ const getDayTextStyles = (numberOfDays) => {
   };
 };
 
-const Column = ({ column, numberOfDays, format, style, textStyle }) => {
+const DayNumber = ({ day, textStyle, dayColor }) => (
+  <Text style={[textStyle, styles.dayNumber, { color: dayColor }]}>
+    {getFormattedDate(day, 'D')}
+  </Text>
+);
+
+const Column = ({
+  column, numberOfDays, format, style, textStyle,
+}) => {
+  const { dayBG, dayColor } = moment().startOf('day').diff(moment(column), 'days') === 0 && format === 'ddd+'
+    ? { dayBG: '#deddff', dayColor: '#2F57E9' }
+    : { dayBG: '#fff', dayColor: '#000' };
+
   return (
     <View style={[styles.column, style]}>
-      <Text
-        style={[
-          { color: style.color },
-          getDayTextStyles(numberOfDays),
-          textStyle,
-        ]}
-      >
-        {getFormattedDate(column, format)}
-      </Text>
+      <View style={[styles.dayContainer, { backgroundColor: dayBG }]}>
+        {format === 'ddd+' && (
+          <DayNumber day={column} textStyle={textStyle} dayColor={dayColor} />
+        )}
+        <Text
+          style={[
+            getDayTextStyles(numberOfDays),
+            textStyle,
+            { color: dayColor },
+          ]}
+        >
+          {getFormattedDate(column, format)}
+        </Text>
+      </View>
     </View>
   );
 };
 
-const Columns = ({ columns, numberOfDays, format, style, textStyle }) => {
+const Columns = ({
+  columns, numberOfDays, format, style, textStyle,
+}) => {
   return (
     <View style={styles.columns}>
       {columns.map((column) => {

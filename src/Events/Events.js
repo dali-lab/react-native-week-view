@@ -83,11 +83,10 @@ class Events extends PureComponent {
         };
 
         const nSoFar = overlappedSoFar.length;
-        const lastEventOverlapped =
-          nSoFar > 0 ? overlappedSoFar[nSoFar - 1] : null;
+        const lastEventOverlapped = nSoFar > 0 ? overlappedSoFar[nSoFar - 1] : null;
         if (
-          !lastEventOverlapped ||
-          areEventsOverlapped(lastEventOverlapped.data, event)
+          !lastEventOverlapped
+          || areEventsOverlapped(lastEventOverlapped.data, event)
         ) {
           overlappedSoFar.push(eventWithStyle);
         } else {
@@ -149,8 +148,7 @@ class Events extends PureComponent {
     const { locationY } = event.nativeEvent;
     const hour = Math.floor(this.yToHour(locationY - CONTENT_OFFSET));
 
-    const adjustment =
-      numberOfDays === 7 ? dayIndex - moment(initialDate).weekday() : dayIndex;
+    const adjustment = numberOfDays === 7 ? dayIndex - moment(initialDate).weekday() : dayIndex;
 
     const date = moment(initialDate).add(adjustment, 'day').toDate();
 

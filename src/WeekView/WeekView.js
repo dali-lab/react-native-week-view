@@ -23,6 +23,7 @@ import {
   setLocale,
   CONTAINER_WIDTH,
 } from '../utils';
+import Title from '../Title/Title';
 
 const MINUTES_IN_DAY = 60 * 24;
 
@@ -53,7 +54,7 @@ export default class WeekView extends Component {
       this.scrollToVerticalStart();
     });
     this.eventsGridScrollX.addListener((position) => {
-      this.header.scrollToOffset({ offset: position.value, animated: false });
+      this.header?.scrollToOffset({ offset: position.value, animated: false });
     });
   }
 
@@ -75,8 +76,7 @@ export default class WeekView extends Component {
       let minutes = timer % 60;
       if (minutes < 10) minutes = `0${minutes}`;
       const hour = Math.floor(timer / 60);
-      const timeString = // this.formatTime() added by Whiteboard.
-        minutes === '00' ? this.formatTime(hour) : `${hour}:${minutes}`;
+      const timeString = minutes === '00' ? this.formatTime(hour) : `${hour}:${minutes}`;
       times.push(timeString);
     }
     return times;
@@ -149,8 +149,8 @@ export default class WeekView extends Component {
 
         newState.initialDates = [...initialDates];
       } else if (
-        movedPages > 0 &&
-        newPage > this.state.initialDates.length - this.pageOffset
+        movedPages > 0
+        && newPage > this.state.initialDates.length - this.pageOffset
       ) {
         const latest = initialDates[initialDates.length - 1];
         const addDays = numberOfDays * daySignToTheFuture;
@@ -255,57 +255,60 @@ export default class WeekView extends Component {
       EventComponent,
       prependMostRecent,
       rightToLeft,
+      selectedDate,
     } = this.props;
     const { initialDates } = this.state;
     const times = this.calculateTimes(hoursInDisplay);
     const eventsByDate = this.sortEventsByDate(events);
-    const horizontalInverted =
-      (prependMostRecent && !rightToLeft) ||
-      (!prependMostRecent && rightToLeft);
+    const horizontalInverted = (prependMostRecent && !rightToLeft)
+      || (!prependMostRecent && rightToLeft);
 
     return (
       <View style={styles.container}>
-        <View
-          style={
-            numberOfDays !== 1
-              ? styles.headerContainer
-              : { opacity: 0, height: 0 }
-          }
-        >
-          <View
-            style={{
-              width: 60,
-            }}
+        {numberOfDays === 1 ? (
+          <Title
+            style={headerStyle}
+            textStyle={headerTextStyle}
+            selectedDate={selectedDate}
+            format={formatDateHeader}
           />
-          <VirtualizedList
-            horizontal
-            pagingEnabled
-            inverted={horizontalInverted}
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={false}
-            ref={this.headerRef}
-            data={initialDates}
-            getItem={(data, index) => data[index]}
-            getItemCount={(data) => data.length}
-            getItemLayout={(_, index) => this.getListItemLayout(index)}
-            keyExtractor={(item) => item}
-            initialScrollIndex={this.pageOffset}
-            renderItem={({ item }) => {
-              return (
-                <View key={item} style={styles.header}>
-                  <Header
-                    style={headerStyle}
-                    textStyle={headerTextStyle}
-                    formatDate={formatDateHeader}
-                    initialDate={item}
-                    numberOfDays={numberOfDays}
-                    rightToLeft={rightToLeft}
-                  />
-                </View>
-              );
-            }}
-          />
-        </View>
+        ) : (
+          <View style={styles.headerContainer}>
+            <View
+              style={{
+                width: 60,
+              }}
+            />
+            <VirtualizedList
+              horizontal
+              pagingEnabled
+              inverted={horizontalInverted}
+              showsHorizontalScrollIndicator={false}
+              scrollEnabled={false}
+              ref={this.headerRef}
+              data={initialDates}
+              getItem={(data, index) => data[index]}
+              getItemCount={(data) => data.length}
+              getItemLayout={(_, index) => this.getListItemLayout(index)}
+              keyExtractor={(item) => item}
+              initialScrollIndex={this.pageOffset}
+              renderItem={({ item }) => {
+                return (
+                  <View key={item} style={styles.header}>
+                    <Header
+                      style={headerStyle}
+                      textStyle={headerTextStyle}
+                      formatDate={formatDateHeader}
+                      initialDate={item}
+                      numberOfDays={numberOfDays}
+                      rightToLeft={rightToLeft}
+                    />
+                  </View>
+                );
+              }}
+            />
+          </View>
+        )}
         {/* Fixed below reference */}
         <ScrollView
           ref={this.verticalAgenda}

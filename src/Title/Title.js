@@ -12,14 +12,14 @@ const DayNumber = ({ day, textStyle, dayColor }) => (
   </Text>
 );
 
-const Title = ({ style, selectedDate, textStyle, format }) => {
-  const { dayBG, dayColor } =
-    moment()
-      .startOf('day')
-      .diff(moment(selectedDate).startOf('day'), 'days') === 0 &&
-    format === 'ddd+'
-      ? { dayBG: '#deddff', dayColor: '#2F57E9' }
-      : { dayBG: '#fff', dayColor: '#000' };
+const Title = ({
+  style, selectedDate, textStyle, format,
+}) => {
+  const { dayBG, dayColor } = moment()
+    .startOf('day')
+    .diff(moment(selectedDate).startOf('day'), 'days') === 0 && format === 'ddd+'
+    ? { dayBG: '#deddff', dayColor: '#2F57E9' }
+    : { dayBG: '#fff', dayColor: '#000' };
 
   return (
     <View style={[styles.column, style]}>

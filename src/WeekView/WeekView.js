@@ -76,8 +76,7 @@ export default class WeekView extends Component {
       let minutes = timer % 60;
       if (minutes < 10) minutes = `0${minutes}`;
       const hour = Math.floor(timer / 60);
-      const timeString = // this.formatTime() added by Whiteboard.
-        minutes === '00' ? this.formatTime(hour) : `${hour}:${minutes}`;
+      const timeString = minutes === '00' ? this.formatTime(hour) : `${hour}:${minutes}`;
       times.push(timeString);
     }
     return times;
@@ -150,8 +149,8 @@ export default class WeekView extends Component {
 
         newState.initialDates = [...initialDates];
       } else if (
-        movedPages > 0 &&
-        newPage > this.state.initialDates.length - this.pageOffset
+        movedPages > 0
+        && newPage > this.state.initialDates.length - this.pageOffset
       ) {
         const latest = initialDates[initialDates.length - 1];
         const addDays = numberOfDays * daySignToTheFuture;
@@ -261,13 +260,19 @@ export default class WeekView extends Component {
     const { initialDates } = this.state;
     const times = this.calculateTimes(hoursInDisplay);
     const eventsByDate = this.sortEventsByDate(events);
-    const horizontalInverted =
-      (prependMostRecent && !rightToLeft) ||
-      (!prependMostRecent && rightToLeft);
+    const horizontalInverted = (prependMostRecent && !rightToLeft)
+      || (!prependMostRecent && rightToLeft);
 
     return (
       <View style={styles.container}>
-        {numberOfDays !== 1 ? (
+        {numberOfDays === 1 ? (
+          <Title
+            style={headerStyle}
+            textStyle={headerTextStyle}
+            selectedDate={selectedDate}
+            format={formatDateHeader}
+          />
+        ) : (
           <View style={styles.headerContainer}>
             <View
               style={{
@@ -303,13 +308,6 @@ export default class WeekView extends Component {
               }}
             />
           </View>
-        ) : (
-          <Title
-            style={headerStyle}
-            textStyle={headerTextStyle}
-            selectedDate={selectedDate}
-            format={formatDateHeader}
-          />
         )}
         {/* Fixed below reference */}
         <ScrollView

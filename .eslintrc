@@ -2,8 +2,7 @@
   "parser": "babel-eslint",
   "extends": [
     "airbnb",
-    "airbnb/hooks",
-    "plugin:prettier/recommended"
+    "airbnb/hooks"
   ],
   "env": {
     "browser": true,

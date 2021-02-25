@@ -23,12 +23,12 @@ const DayNumber = ({ day, textStyle, dayColor }) => (
   </Text>
 );
 
-const Column = ({ column, numberOfDays, format, style, textStyle }) => {
-  const { dayBG, dayColor } =
-    moment().startOf('day').diff(moment(column), 'days') === 0 &&
-    format === 'ddd+'
-      ? { dayBG: '#deddff', dayColor: '#2F57E9' }
-      : { dayBG: '#fff', dayColor: '#000' };
+const Column = ({
+  column, numberOfDays, format, style, textStyle,
+}) => {
+  const { dayBG, dayColor } = moment().startOf('day').diff(moment(column), 'days') === 0 && format === 'ddd+'
+    ? { dayBG: '#deddff', dayColor: '#2F57E9' }
+    : { dayBG: '#fff', dayColor: '#000' };
 
   return (
     <View style={[styles.column, style]}>
@@ -50,7 +50,9 @@ const Column = ({ column, numberOfDays, format, style, textStyle }) => {
   );
 };
 
-const Columns = ({ columns, numberOfDays, format, style, textStyle }) => {
+const Columns = ({
+  columns, numberOfDays, format, style, textStyle,
+}) => {
   return (
     <View style={styles.columns}>
       {columns.map((column) => {

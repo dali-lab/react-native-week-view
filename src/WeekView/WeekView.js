@@ -23,6 +23,7 @@ import {
   setLocale,
   CONTAINER_WIDTH,
 } from '../utils';
+import Title from '../Title/Title';
 
 const MINUTES_IN_DAY = 60 * 24;
 
@@ -53,7 +54,7 @@ export default class WeekView extends Component {
       this.scrollToVerticalStart();
     });
     this.eventsGridScrollX.addListener((position) => {
-      this.header.scrollToOffset({ offset: position.value, animated: false });
+      this.header?.scrollToOffset({ offset: position.value, animated: false });
     });
   }
 
@@ -255,6 +256,7 @@ export default class WeekView extends Component {
       EventComponent,
       prependMostRecent,
       rightToLeft,
+      selectedDate,
     } = this.props;
     const { initialDates } = this.state;
     const times = this.calculateTimes(hoursInDisplay);
@@ -265,47 +267,50 @@ export default class WeekView extends Component {
 
     return (
       <View style={styles.container}>
-        <View
-          style={
-            numberOfDays !== 1
-              ? styles.headerContainer
-              : { opacity: 0, height: 0 }
-          }
-        >
-          <View
-            style={{
-              width: 60,
-            }}
+        {numberOfDays !== 1 ? (
+          <View style={styles.headerContainer}>
+            <View
+              style={{
+                width: 60,
+              }}
+            />
+            <VirtualizedList
+              horizontal
+              pagingEnabled
+              inverted={horizontalInverted}
+              showsHorizontalScrollIndicator={false}
+              scrollEnabled={false}
+              ref={this.headerRef}
+              data={initialDates}
+              getItem={(data, index) => data[index]}
+              getItemCount={(data) => data.length}
+              getItemLayout={(_, index) => this.getListItemLayout(index)}
+              keyExtractor={(item) => item}
+              initialScrollIndex={this.pageOffset}
+              renderItem={({ item }) => {
+                return (
+                  <View key={item} style={styles.header}>
+                    <Header
+                      style={headerStyle}
+                      textStyle={headerTextStyle}
+                      formatDate={formatDateHeader}
+                      initialDate={item}
+                      numberOfDays={numberOfDays}
+                      rightToLeft={rightToLeft}
+                    />
+                  </View>
+                );
+              }}
+            />
+          </View>
+        ) : (
+          <Title
+            style={headerStyle}
+            textStyle={headerTextStyle}
+            selectedDate={selectedDate}
+            format={formatDateHeader}
           />
-          <VirtualizedList
-            horizontal
-            pagingEnabled
-            inverted={horizontalInverted}
-            showsHorizontalScrollIndicator={false}
-            scrollEnabled={false}
-            ref={this.headerRef}
-            data={initialDates}
-            getItem={(data, index) => data[index]}
-            getItemCount={(data) => data.length}
-            getItemLayout={(_, index) => this.getListItemLayout(index)}
-            keyExtractor={(item) => item}
-            initialScrollIndex={this.pageOffset}
-            renderItem={({ item }) => {
-              return (
-                <View key={item} style={styles.header}>
-                  <Header
-                    style={headerStyle}
-                    textStyle={headerTextStyle}
-                    formatDate={formatDateHeader}
-                    initialDate={item}
-                    numberOfDays={numberOfDays}
-                    rightToLeft={rightToLeft}
-                  />
-                </View>
-              );
-            }}
-          />
-        </View>
+        )}
         {/* Fixed below reference */}
         <ScrollView
           ref={this.verticalAgenda}

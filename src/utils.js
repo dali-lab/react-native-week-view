@@ -10,7 +10,7 @@ export const DATE_STR_FORMAT = 'YYYY-MM-DD';
 export const availableNumberOfDays = [1, 3, 5, 7];
 
 export const getFormattedDate = (date, format) => {
-  return format === 'ddd-'
+  return format === 'ddd-' || format === 'ddd+'
     ? moment(date).format(format.slice(0, 3)).slice(0, 1)
     : moment(date).format(format);
 };

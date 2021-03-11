@@ -257,7 +257,7 @@ export default class WeekView extends Component {
       onEventLongPress,
       sendCallback,
       events,
-      allDayEvents,
+      // allDayEvents,
       hoursInDisplay,
       onGridClick,
       EventComponent,
@@ -268,7 +268,7 @@ export default class WeekView extends Component {
     const { initialDates } = this.state;
     const times = this.calculateTimes(hoursInDisplay);
     const eventsByDate = this.sortEventsByDate(events);
-    const allDayEventsByDate = this.sortEventsByDate(allDayEvents);
+    // const allDayEventsByDate = this.sortEventsByDate(allDayEvents);
     const horizontalInverted = (prependMostRecent && !rightToLeft)
       || (!prependMostRecent && rightToLeft);
 
@@ -324,6 +324,7 @@ export default class WeekView extends Component {
          * Need to figure out way to make height dynamic to amount of contents inside
          * Need to figure out how to implement dragging features
          * Need to control EventComponent dimensions and placement
+         * AllDayEvent's methods need to be changed for sure
          */}
         {/* <View style={styles.headerContainer}>
           <View style={{ width: 60, height: 90, backgroundColor: 'white' }} />
@@ -420,7 +421,7 @@ export default class WeekView extends Component {
 
 WeekView.propTypes = {
   events: PropTypes.arrayOf(Event.propTypes.event),
-  allDayEvents: PropTypes.arrayOf(Event.propTypes.event),
+  // allDayEvents: PropTypes.arrayOf(Event.propTypes.event),
   formatDateHeader: PropTypes.string,
   numberOfDays: PropTypes.oneOf(availableNumberOfDays).isRequired,
   onSwipeNext: PropTypes.func,

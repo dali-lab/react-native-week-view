@@ -39,8 +39,6 @@ class AllDayEvents extends PureComponent {
     const height = this.minutesToYDimension(deltaMinutes);
     const width = this.getEventItemWidth();
 
-    console.log(item.name, height, width);
-
     return {
       top, // top + CONTENT_OFFSET,
       left: 0,
@@ -175,13 +173,6 @@ class AllDayEvents extends PureComponent {
       numberOfDays,
       rightToLeft,
     );
-
-    // console.log('from alldayevents.js', totalEvents);
-    totalEvents.forEach((eventsInSection) => {
-      eventsInSection.forEach((item) => {
-        console.log('from allday', item);
-      });
-    });
 
     return (
       <View style={styles.container}>

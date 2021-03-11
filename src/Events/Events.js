@@ -175,8 +175,6 @@ class Events extends PureComponent {
       rightToLeft,
     );
 
-    console.log('from events.js', totalEvents);
-
     return (
       <View style={styles.container}>
         {times.map((time) => (

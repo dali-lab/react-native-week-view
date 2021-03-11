@@ -24,6 +24,7 @@ import {
   CONTAINER_WIDTH,
 } from '../utils';
 import Title from '../Title/Title';
+import AllDayEvents from '../AllDayEvents';
 
 const MINUTES_IN_DAY = 60 * 24;
 
@@ -33,6 +34,7 @@ export default class WeekView extends Component {
     this.eventsGrid = null;
     this.verticalAgenda = React.createRef();
     this.header = null;
+    this.allDay = null;
     this.pageOffset = 2;
     this.currentPageIndex = this.pageOffset;
     this.eventsGridScrollX = new Animated.Value(0);
@@ -55,6 +57,7 @@ export default class WeekView extends Component {
     });
     this.eventsGridScrollX.addListener((position) => {
       this.header?.scrollToOffset({ offset: position.value, animated: false });
+      this.allDay?.scrollToOffset({ offset: position.value, animated: false });
     });
   }
 
@@ -182,6 +185,10 @@ export default class WeekView extends Component {
     this.header = ref;
   };
 
+  allDayRef = (ref) => {
+    this.allDay = ref;
+  }
+
   calculatePagesDates = (currentMoment, numberOfDays, prependMostRecent) => {
     const initialDates = [];
     for (let i = -this.pageOffset; i <= this.pageOffset; i += 1) {
@@ -250,6 +257,7 @@ export default class WeekView extends Component {
       onEventLongPress,
       sendCallback,
       events,
+      allDayEvents,
       hoursInDisplay,
       onGridClick,
       EventComponent,
@@ -260,6 +268,7 @@ export default class WeekView extends Component {
     const { initialDates } = this.state;
     const times = this.calculateTimes(hoursInDisplay);
     const eventsByDate = this.sortEventsByDate(events);
+    const allDayEventsByDate = this.sortEventsByDate(allDayEvents);
     const horizontalInverted = (prependMostRecent && !rightToLeft)
       || (!prependMostRecent && rightToLeft);
 
@@ -309,6 +318,46 @@ export default class WeekView extends Component {
             />
           </View>
         )}
+        {/**
+         * Attempt to display all-day events at top of calendar
+         * This is probably the best way to implement with this library
+         * Need to figure out way to make height dynamic to amount of contents inside
+         * Need to figure out how to implement dragging features
+         * Need to control EventComponent dimensions and placement
+         */}
+        {/* <View style={styles.headerContainer}>
+          <View style={{ width: 60, height: 90, backgroundColor: 'white' }} />
+          <VirtualizedList
+            horizontal
+            pagingEnabled
+            inverted={horizontalInverted}
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}
+            data={initialDates}
+            ref={this.allDayRef}
+            getItem={(data, index) => data[index]}
+            getItemCount={(data) => data.length}
+            getItemLayout={(_, index) => this.getListItemLayout(index)}
+            keyExtractor={(item) => item}
+            initialScrollIndex={this.pageOffset}
+            renderItem={({ item }) => (
+              <AllDayEvents
+                key={item.toString()}
+                eventsByDate={allDayEventsByDate}
+                initialDate={item.toString()}
+                numberOfDays={numberOfDays}
+                onEventPress={onEventPress}
+                onEventLongPress={onEventLongPress}
+                sendCallback={sendCallback}
+                onGridClick={onGridClick}
+                hoursInDisplay={hoursInDisplay}
+                EventComponent={EventComponent}
+                eventContainerStyle={eventContainerStyle}
+                rightToLeft={rightToLeft}
+              />
+            )}
+          />
+        </View> */}
         {/* Fixed below reference */}
         <ScrollView
           ref={this.verticalAgenda}
@@ -371,6 +420,7 @@ export default class WeekView extends Component {
 
 WeekView.propTypes = {
   events: PropTypes.arrayOf(Event.propTypes.event),
+  allDayEvents: PropTypes.arrayOf(Event.propTypes.event),
   formatDateHeader: PropTypes.string,
   numberOfDays: PropTypes.oneOf(availableNumberOfDays).isRequired,
   onSwipeNext: PropTypes.func,

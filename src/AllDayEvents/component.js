@@ -14,7 +14,7 @@ import {
   availableNumberOfDays,
 } from '../utils';
 
-import styles, { CONTENT_OFFSET } from './Events.styles';
+import styles, { CONTENT_OFFSET } from './styles';
 
 const MINUTES_IN_HOUR = 60;
 const EVENT_HORIZONTAL_PADDING = 15;
@@ -28,7 +28,7 @@ const areEventsOverlapped = (event1, event2) => {
   return endDate.isSameOrAfter(event2.startDate);
 };
 
-class Events extends PureComponent {
+class AllDayEvents extends PureComponent {
   getStyleForEvent = (item) => {
     const startDate = moment(item.startDate);
     const startHours = startDate.hours();
@@ -39,8 +39,10 @@ class Events extends PureComponent {
     const height = this.minutesToYDimension(deltaMinutes);
     const width = this.getEventItemWidth();
 
+    console.log(item.name, height, width);
+
     return {
-      top: top + CONTENT_OFFSET,
+      top, // top + CONTENT_OFFSET,
       left: 0,
       height,
       width,
@@ -160,7 +162,6 @@ class Events extends PureComponent {
       eventsByDate,
       initialDate,
       numberOfDays,
-      times,
       onEventPress,
       onEventLongPress,
       sendCallback,
@@ -175,18 +176,15 @@ class Events extends PureComponent {
       rightToLeft,
     );
 
-    console.log('from events.js', totalEvents);
+    // console.log('from alldayevents.js', totalEvents);
+    totalEvents.forEach((eventsInSection) => {
+      eventsInSection.forEach((item) => {
+        console.log('from allday', item);
+      });
+    });
 
     return (
       <View style={styles.container}>
-        {times.map((time) => (
-          <View
-            key={time}
-            style={[styles.timeRow, { height: TIME_LABEL_HEIGHT }]}
-          >
-            <View style={styles.timeLabelLine} />
-          </View>
-        ))}
         <View style={styles.events}>
           {totalEvents.map((eventsInSection, dayIndex) => (
             <TouchableWithoutFeedback
@@ -195,16 +193,18 @@ class Events extends PureComponent {
             >
               <View style={[styles.event, { overflow: 'visible' }]}>
                 {eventsInSection.map((item) => (
-                  <Event
-                    key={item.data.id}
-                    event={item.data}
-                    position={item.style}
-                    onPress={onEventPress}
-                    onLongPress={onEventLongPress}
-                    EventComponent={EventComponent}
-                    containerStyle={eventContainerStyle}
-                    sendCallback={sendCallback}
-                  />
+                  <View style={{ height: 45 }}>
+                    <Event
+                      key={item.data.id}
+                      event={item.data}
+                      position={item.style}
+                      onPress={onEventPress}
+                      onLongPress={onEventLongPress}
+                      EventComponent={EventComponent}
+                      containerStyle={eventContainerStyle}
+                      sendCallback={sendCallback}
+                    />
+                  </View>
                 ))}
               </View>
             </TouchableWithoutFeedback>
@@ -215,13 +215,12 @@ class Events extends PureComponent {
   }
 }
 
-Events.propTypes = {
+AllDayEvents.propTypes = {
   numberOfDays: PropTypes.oneOf(availableNumberOfDays).isRequired,
   eventsByDate: PropTypes.objectOf(PropTypes.arrayOf(Event.propTypes.event))
     .isRequired,
   initialDate: PropTypes.string.isRequired,
   hoursInDisplay: PropTypes.number.isRequired,
-  times: PropTypes.arrayOf(PropTypes.string).isRequired,
   onEventPress: PropTypes.func,
   onEventLongPress: PropTypes.func,
   sendCallback: PropTypes.func,
@@ -231,4 +230,4 @@ Events.propTypes = {
   rightToLeft: PropTypes.bool,
 };
 
-export default Events;
+export default AllDayEvents;

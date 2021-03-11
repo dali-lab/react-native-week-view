@@ -96,7 +96,7 @@ export default class WeekView extends Component {
     const { startHour, hoursInDisplay } = this.props;
     const startHeight = (startHour * CONTAINER_HEIGHT) / hoursInDisplay;
     // Added 'current' because it would not work otherwise
-    this.verticalAgenda.current.scrollTo({
+    this.verticalAgenda.current?.scrollTo({
       y: startHeight,
       x: 0,
       animated: false,
@@ -142,7 +142,7 @@ export default class WeekView extends Component {
         const initialDate = moment(first).add(addDays, 'd');
         initialDates.unshift(initialDate.format(DATE_STR_FORMAT));
         this.currentPageIndex += 1;
-        this.eventsGrid.scrollToIndex({
+        this.eventsGrid?.scrollToIndex({
           index: this.currentPageIndex,
           animated: false,
         });
@@ -327,6 +327,7 @@ export default class WeekView extends Component {
               renderItem={({ item }) => {
                 return (
                   <Events
+                    key={item.toString()}
                     times={times}
                     eventsByDate={eventsByDate}
                     initialDate={item.toString()}

@@ -40,7 +40,7 @@ const Title = ({
 };
 
 Title.propTypes = {
-  selectedDate: PropTypes.instanceOf(Date).isRequired,
+  selectedDate: PropTypes.object.isRequired,
   style: PropTypes.object,
   textStyle: PropTypes.object,
   format: PropTypes.string,

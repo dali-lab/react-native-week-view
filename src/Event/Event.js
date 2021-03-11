@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { Text, Pressable, View } from 'react-native';
 import styles from './Event.styles';
 
@@ -51,8 +50,8 @@ const eventPropType = PropTypes.shape({
   color: PropTypes.string,
   id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   description: PropTypes.string,
-  startDate: PropTypes.instanceOf(moment).isRequired,
-  endDate: PropTypes.instanceOf(moment).isRequired,
+  startDate: PropTypes.object.isRequired,
+  endDate: PropTypes.object.isRequired,
 });
 
 const positionPropType = PropTypes.shape({
